@@ -364,6 +364,7 @@ public class BaseJInternalFrame extends javax.swing.JInternalFrame {
         }
         
         
+         
         
 //            int fl=JOptionPane.showConfirmDialog(null, "¿Quieres eliminar los datos?", "Eliminar", JOptionPane.YES_NO_OPTION);
 //           if (fl==JOptionPane.YES_OPTION){
