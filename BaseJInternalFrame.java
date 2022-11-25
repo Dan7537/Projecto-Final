@@ -230,19 +230,154 @@ public class BaseJInternalFrame extends javax.swing.JInternalFrame {
         //File 
     	//
         
-            int fl=JOptionPane.showConfirmDialog(null, "¿Quieres eliminar los datos?", "Eliminar", JOptionPane.YES_NO_OPTION);
-           if (fl==JOptionPane.YES_OPTION){
+        
+        
+        
+         try{
+            String newName = IdentificacionTextField.getText();
+            String nameNumberString;
+            String name;
+            String sename="";
+            // Using file pointer creating the file.
+            //File base4 ;
+           // 
+            base = new File("base.txt");
 
-        Path path=Paths.get("base.txt");
-           try{
-         Files.delete(path);
-           }
-           catch(IOException e){
-               e.printStackTrace();
-           }
-       	   
+
+            // Opening file in reading and write mode.
+            RandomAccessFile raf
+            = new RandomAccessFile(base, "rw");
+            boolean found = false;
+
+            // Checking whether the name
+            // of contact already exists.
+            // getFilePointer() give the current offset
+            // value from start of the file.
+
+            while (raf.getFilePointer() < raf.length()) {
+
+                // reading line from the file.
+                nameNumberString = raf.readLine();
+
+                // splitting the string to get name and
+                // number
+                String[] lineSplit
+                = nameNumberString.split(",");
+
+                // separating name and number.
+                name = lineSplit[0];
+
+                // if condition to find existence of record.
+                if (name.equals(newName)) {
+                    found = true;
+                    sename = nameNumberString;
+                    break;
+                }
+            }
+
+            // Update the contact if record exists.
+            if (found == true) {
+
+                // Creating a temporary file
+                // with file pointer as tmpFile.
+                File tmpFile = new File("temp.txt");
+
+                // Opening this temporary file
+                // in ReadWrite Mode
+                RandomAccessFile tmpraf
+                = new RandomAccessFile(tmpFile, "rw");
+
+                // Set file pointer to start
+                raf.seek(0);
+
+                newName="";
+                while (raf.getFilePointer()
+                    < raf.length()) {
+
+                    // Reading the contact from the file
+                    nameNumberString = raf.readLine();
+
+                    // Check if the fetched contact
+                    // is the one to be updated
+                    if (sename.equals(nameNumberString)) {
+
+                        // Update the number of this contact
+                        nameNumberString
+                        = newName;
+                    }
+                    else{
+                    // Add this contact in the temporary
+                    // file
+                    tmpraf.writeBytes(nameNumberString);
+
+                    // Add the line separator in the
+                    // temporary file
+                    tmpraf.writeBytes(
+                        System.lineSeparator());
+                }}
+
+                // The contact has been updated now
+                // So copy the updated content from
+                // the temporary file to original file.
+
+                // Set both files pointers to start
+                raf.seek(0);
+                tmpraf.seek(0);
+
+                // Copy the contents from
+                // the temporary file to original file.
+                while (tmpraf.getFilePointer()
+                    < tmpraf.length()) {
+                    raf.writeBytes(tmpraf.readLine());
+                    raf.writeBytes(System.lineSeparator());
+                }
+
+                // Set the length of the original file
+                // to that of temporary.
+                raf.setLength(tmpraf.length());
+
+                // Closing the resources.
+                tmpraf.close();
+                raf.close();
+
+                // Deleting the temporary file
+                tmpFile.delete();
+
+            }
+
+            // The contact to be updated
+            // could not be found
+            else {
+
+                // Closing the resources.
+                raf.close();
+
+                // Print the message
+
+                JOptionPane.showMessageDialog(null,"Identificacion no existe ");
+
+            }
 
         }
+        catch (IOException ioe) {
+
+        }
+        
+        
+        
+//            int fl=JOptionPane.showConfirmDialog(null, "¿Quieres eliminar los datos?", "Eliminar", JOptionPane.YES_NO_OPTION);
+//           if (fl==JOptionPane.YES_OPTION){
+//
+//        Path path=Paths.get("base.txt");
+//           try{
+//         Files.delete(path);
+//           }
+//           catch(IOException e){
+//               e.printStackTrace();
+//           }
+//       	   
+//
+//        }
         
     }//GEN-LAST:event_EliminarButtonActionPerformed
 

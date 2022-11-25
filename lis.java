@@ -50,12 +50,12 @@ public class lis extends javax.swing.JFrame {
                 // Set both files pointers to start
                 //raf.seek(0);
 
-                raf.close();
+                
  
             
         }
  
-
+raf.close();
     
     }        
              catch(IOException t){
